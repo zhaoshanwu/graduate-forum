@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sw.dao.AdminDao">
+
+    <select id="selectAdminByNP" parameterType="String" resultType="Admin">
+        select admin_number,admin_name,admin_password
+        from admin
+        where admin_number=#{adminNumber} and admin_password=#{adminPassword};
+    </select>
+
+    <update id="updateAdminName" parameterType="String">
+        update admin
+        set admin_name=#{adminName}
+        where admin_number=#{adminNumber};
+    </update>
+
+    <update id="updateAdminPassword" parameterType="String">
+        update admin
+        set admin_password=#{adminPassword}
+        where admin_number=#{adminNumber};
+    </update>
+</mapper>

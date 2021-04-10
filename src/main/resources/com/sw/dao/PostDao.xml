@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sw.dao.PostDao">
+
+    <select id="selectPostCount" resultType="Integer">
+        select count(post_id)
+        from posts
+        <where>
+            <if test="status != null">
+                status=#{status}
+            </if>
+            <if test="label != null">
+                and ${label}=#{labelYN}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPostNormalAll" resultType="Post">
+        select *
+        from posts
+        where status=#{status} and top=0
+        order by publish_date desc
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectLabelPostAll" resultType="Post">
+        select *
+        from posts
+        where ${label}=1 and status=#{status}
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectPostById" parameterType="String" resultType="Post">
+        select *
+        from posts
+        where post_id=#{postId};
+    </select>
+
+    <select id="selectPostByBoardId" resultType="Post">
+        select *
+        from posts
+        <where>
+            <if test="boardId != null">
+                board_id=#{boardId}
+            </if>
+            <if test="status != null">
+                and status=#{status}
+            </if>
+        </where>
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectPostByInitiateId" resultType="Post">
+        select *
+        from posts
+        <where>
+            <if test="userId != null">
+                initiate_id=#{userId}
+            </if>
+            <if test="status != null">
+                and status=#{status}
+            </if>
+        </where>
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectPostByAuditId" resultType="Post">
+        select *
+        from posts
+        <where>
+            <if test="userId != null">
+                audit_id=#{userId}
+            </if>
+            <if test="status != null">
+                and status=#{status}
+            </if>
+        </where>
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectEnshrinePostByUserId" resultType="Post">
+        select p.*
+        from enshrine_user_post as e join posts as p on e.byenshrine_post_id = p.post_id
+        <where>
+            <if test="userId != null">
+                e.enshrine_user_id=#{userId}
+            </if>
+            <if test="status != null">
+                and p.status=#{status}
+            </if>
+        </where>
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectVisitPostByUserId" resultType="Post">
+        select *
+        from visit as v join posts as p on v.visit_post_id = p.post_id
+        <where>
+            <if test="userId != null">
+                v.visit_user_id=#{userId}
+            </if>
+            <if test="status != null">
+                and p.status=#{status}
+            </if>
+        </where>
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectPostNum" parameterType="String" resultType="Integer">
+        select count(post_id)
+        from posts
+        <where>
+            <if test="publishDate != null">
+                publish_date like '${publishDate}%'
+            </if>
+            <if test="status != null">
+                and status=#{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertPost" parameterType="Post">
+        insert into posts
+        values (#{postId},#{title},#{boardId},#{initiateId},#{auditId}
+                ,#{content},#{publishDate},#{click},#{praise},#{disagree}
+                ,#{comment},#{recommend},#{top},#{elite},#{status},#{deleteDate});
+    </insert>
+
+    <update id="updatePost" parameterType="Post">
+        update posts
+        <set>
+            <if test="title != null">
+                title=#{title},
+            </if>
+            <if test="boardId != null">
+                board_id=#{boardId},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="click != null">
+                click=click+#{click},
+            </if>
+            <if test="praise != null">
+                praise=praise+#{praise},
+            </if>
+            <if test="disagree != null">
+                disagree=disagree+#{disagree},
+            </if>
+            <if test="comment != null">
+                comment=comment+#{comment},
+            </if>
+            <if test="recommend != null">
+                recommend=#{recommend},
+            </if>
+            <if test="top != null">
+                top=#{top},
+            </if>
+            <if test="elite != null">
+                elite=#{elite},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        where post_id=#{postId};
+    </update>
+
+    <update id="updateSoftPost">
+        update posts
+        set delete_date=#{deleteDate},status='删除'
+        where post_id=#{postId};
+    </update>
+
+    <delete id="deleteStiffPost" parameterType="String">
+        delete from posts
+        where post_id=#{postId};
+    </delete>
+</mapper>

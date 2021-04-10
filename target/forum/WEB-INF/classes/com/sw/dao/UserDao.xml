@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sw.dao.UserDao">
+
+    <select id="selectUserAll" parameterType="String" resultType="User">
+        select user_id,user_name,user_number,user_password,status,
+                experience,user_type,register_date,finally_date,signature
+        from users
+        <where>
+            <if test="status != null">
+                status=#{status}
+            </if>
+            <if test="userType != null">
+                and user_type=#{userType}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserByName" parameterType="String" resultType="User">
+        select user_id,user_name,user_number,user_password,status,
+                experience,user_type,register_date,finally_date,signature
+        from users
+        where user_name in
+            (select user_name from users where user_name like #{userName});
+    </select>
+
+    <select id="selectUserById" parameterType="String" resultType="User">
+        select *
+        from users
+        where user_id=#{userId};
+    </select>
+
+    <select id="selectUserByNumber" parameterType="String" resultType="String">
+        select user_id
+        from users
+        where user_number=#{userNumber};
+    </select>
+
+    <select id="selectUserByNP" parameterType="String" resultType="User">
+        select user_id,user_name,user_number,user_password,status,
+                experience,user_type,register_date,finally_date,signature
+        from users
+        where user_number=#{userNumber} and user_password=#{userPassword} and status='正常';
+    </select>
+
+    <select id="selectUserNum" parameterType="String" resultType="Integer">
+        select count(user_id)
+        from users
+        where status=#{status};
+    </select>
+
+    <insert id="insertUser" parameterType="User">
+        insert into users
+        values (#{userId},#{userName},#{userNumber},#{userPassword},#{status},#{experience}
+                ,#{userType},#{registerDate},#{finallyDate},#{signature});
+    </insert>
+
+    <update id="updateUser" parameterType="String">
+        update users
+        <set>
+            <if test="userName != null">
+                user_name=#{userName},
+            </if>
+            <if test="userPassword != null">
+                user_password=#{userPassword},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="experience != null">
+                experience=experience+#{experience},
+            </if>
+            <if test="userType != null">
+                user_type=#{userType},
+            </if>
+            <if test="finallyDate != null">
+                finally_date=#{finallyDate},
+            </if>
+            <if test="signature != null">
+                signature=#[signature},
+            </if>
+        </set>
+        where user_id=#{userId};
+    </update>
+
+    <delete id="deleteUser" parameterType="String">
+        delete from users
+        where user_id=#{userId};
+    </delete>
+</mapper>

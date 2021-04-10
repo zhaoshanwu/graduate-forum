@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sw.dao.ParentBoardDao">
+
+    <select id="selectParentBoardAll" resultType="ParentBoard">
+        select parent_board_id,parent_board_name,parent_board_date,remark
+        from parentboards;
+    </select>
+
+    <select id="selectParentBoardNameByPostId" parameterType="String" resultType="BoardName">
+        select board_name,parent_board_name
+        from posts as p join boards as b on p.board_id=b.board_id
+             join parentboards as pb on b.parent_board_id=pb.parent_board_id
+        where post_id=#{postId};
+    </select>
+
+    <select id="selectParentBoardByName" parameterType="String" resultType="String">
+        select parent_board_id
+        from parentboards
+        where parent_board_name=#{parentBoardName};
+    </select>
+
+    <insert id="insertParentBoard" parameterType="ParentBoard">
+        insert into parentboards
+        values (#{parentBoardId},#{parentBoardName},#{parentBoardDate},#{remark});
+    </insert>
+
+    <update id="updateParentBoard" parameterType="ParentBoard">
+        update parentboards
+        <set>
+            <if test="parentBoardName != null">
+                parent_board_name=#{parentBoardName},
+            </if>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+        </set>
+        where parent_board_id=#{parentBoardId};
+    </update>
+
+    <delete id="deleteParentBoard" parameterType="String">
+        delete from parentboards
+        where parent_board_id=#{parentBoardId};
+    </delete>
+</mapper>

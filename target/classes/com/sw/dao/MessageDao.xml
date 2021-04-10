@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sw.dao.MessageDao">
+
+    <select id="selectMessageById" parameterType="String" resultType="Message">
+        select *
+        from messages
+        where user_id=#{userId};
+    </select>
+
+    <insert id="insertMessage" parameterType="Message">
+        insert into messages
+        values (#{userId},#{stature},#{weight},#{sex},#{birth},#{site},#{phone},#{loveAncient},
+                #{hobby},#{work},#{mail},#{qq});
+    </insert>
+
+    <update id="updateMessage" parameterType="Message">
+        update messages
+        <set>
+            <if test="stature != null">
+                stature=#{stature},
+            </if>
+            <if test="weight != null">
+                weight=#{weight},
+            </if>
+            <if test="sex != null">
+                sex=#{sex},
+            </if>
+            <if test="birth != null">
+                birth=#{birth},
+            </if>
+            <if test="site != null">
+                site=#{site},
+            </if>
+            <if test="phone != null">
+                phone=#{phone},
+            </if>
+            <if test="loveAncient != null">
+                love_ancient=#{loveAncient},
+            </if>
+            <if test="hobby != null">
+                hobby=#{hobby},
+            </if>
+            <if test="work != null">
+                work=#{work},
+            </if>
+            <if test="mail != null">
+                mail=#[mail},
+            </if>
+            <if test="qq != null">
+                qq=#{qq},
+            </if>
+        </set>
+        where user_id=#{userId};
+    </update>
+
+    <delete id="deleteMessage" parameterType="String">
+        delete from messages
+        where user_id=#{userId};
+    </delete>
+
+</mapper>

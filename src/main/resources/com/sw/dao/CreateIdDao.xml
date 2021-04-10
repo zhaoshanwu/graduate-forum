@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sw.dao.CreateIdDao">
+
+    <select id="selectCreateId" resultType="CreateId">
+        select day_id as dayId,id_date as idDate from createid where num = 1;
+    </select>
+
+    <update id="updateCreateId" parameterType="CreateId">
+        update createid set day_id = #{dayId},id_date = #{idDate} where num = 1;
+    </update>
+</mapper>

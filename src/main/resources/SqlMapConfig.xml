@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <!-- 打印sql日志 -->
+<!--        <setting name="logImpl" value="STDOUT_LOGGING" />-->
+        <!-- 数据库列名对应实体类下划线 -->
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+    </settings>
+
+    <typeAliases>
+        <package name="com.sw.entity"/>
+    </typeAliases>
+
+    <mappers>
+        <package name="com.sw.dao"/>
+    </mappers>
+</configuration>

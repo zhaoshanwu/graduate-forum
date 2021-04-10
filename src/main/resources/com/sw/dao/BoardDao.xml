@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sw.dao.BoardDao">
+
+    <select id="selectBoardIdAndName" resultType="BoardIdAndName">
+        select board_id,board_name
+        from boards;
+    </select>
+
+    <select id="selectBoardByParentBoardId" parameterType="String" resultType="Board">
+        select board_id,parent_board_id,board_name,user_id,establish_date,remark
+        from boards
+        where parent_board_id=#{parentBoardId};
+    </select>
+
+    <select id="selectBoardNameByPostId" parameterType="String" resultType="String">
+        select b.board_name
+        from boards as b join posts as p on b.board_id=p.board_id
+        where p.post_id=#{postId};
+    </select>
+
+    <select id="selectBoardByBoardName" parameterType="String" resultType="String">
+        select board_id
+        from boards
+        where board_name=#{boardName};
+    </select>
+
+    <select id="selectBoardByLikeBoardName" parameterType="String" resultType="Board">
+        select board_id,parent_board_id,board_name,user_id,establish_date,remark
+        from boards
+        where board_name in
+        (select board_name from boards where board_name like #{boardName});
+    </select>
+
+    <select id="selectBoardByUserId" parameterType="String" resultType="Board">
+        select board_id,parent_board_id,board_name,user_id,establish_date,remark
+        from boards
+        where user_id=#{userId};
+    </select>
+
+    <insert id="insertBoard" parameterType="Board">
+        insert into boards
+        values (#{boardId},#{parentBoardId},#{boardName},#{userId},#{establishDate},#{remark});
+    </insert>
+
+    <update id="updateBoard" parameterType="Board">
+        update boards
+        <set>
+            <if test="parentBoardId != null">
+                parent_board_id=#{parentBoardId},
+            </if>
+            <if test="boardName != null">
+                board_name=#{boardName},
+            </if>
+            <if test="userId != null">
+                user_id=#{userId},
+            </if>
+            <if test="establishDate != null">
+                establish_date=#{establishDate},
+            </if>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+        </set>
+        where board_id=#{boardId};
+    </update>
+
+    <delete id="deleteBoard" parameterType="String">
+        delete from boards
+        where board_id=#{boardId};
+    </delete>
+</mapper>

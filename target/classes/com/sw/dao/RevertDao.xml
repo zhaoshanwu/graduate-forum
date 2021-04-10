@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sw.dao.RevertDao">
+
+    <select id="selectRevertByCommentId" resultType="Revert">
+        select *
+        from reverts
+        where comment_id=#{commentId} and status=#{status}
+        order by revert_date desc
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectRevertByUserId" resultType="Revert">
+        select *
+        from reverts
+        where user_id=#{userId} and status=#{status}
+        order by revert_date desc
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectCommentIdByRevertId" parameterType="String" resultType="String">
+        select comment_id
+        from reverts
+        where revert_id=#{revertId};
+    </select>
+
+    <insert id="insertRevert" parameterType="Revert">
+        insert into reverts
+        values (#{revertId},#{commentId},#{userId},#{content},#{revertDate},#{praise},#{disagree},#{status});
+    </insert>
+
+    <update id="updateRevert" parameterType="Revert">
+        update reverts
+        <set>
+            <if test="praise != null">
+                praise=praise+#{praise},
+            </if>
+            <if test="disagree != null">
+                disagree=disagree+#{disagree},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        where revert_id=#{revertId};
+    </update>
+
+    <delete id="deleteRevert" parameterType="String">
+        delete from reverts
+        where revert_id=#{revertId};
+    </delete>
+</mapper>
