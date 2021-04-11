@@ -26,4 +26,7 @@ public interface MessageDao {
 
     // 删除用户信息
     public int deleteMessage(@Param("userId") String userId);
+
+    // 根据用户ID批量删除用户信息
+    public int deleteMuchMessage(String[] userIds);
 }

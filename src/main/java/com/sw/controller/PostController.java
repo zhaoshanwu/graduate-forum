@@ -24,7 +24,7 @@ public class PostController {
     private UserService userService;
 
     /**
-     * 获取数据库中该状态该标签帖子的个数
+     * 获取该状态该标签帖子的个数
      * @return
      */
     @RequestMapping(value = "/get/count",produces = {"application/json;charset=UTF-8"})

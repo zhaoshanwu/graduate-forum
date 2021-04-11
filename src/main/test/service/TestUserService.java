@@ -22,13 +22,13 @@ public class TestUserService {
 
     @Test
     public void selectUserAll() {
-        List<User> userList = userService.selectUserAll("正常", "普通用户");
+        List<User> userList = userService.selectUserAll("正常", "普通用户", 0, 3);
         System.out.println(userList);
     }
 
     @Test
     public void selectUserByName() {
-        List<User> userList = userService.selectUserByName("鼠");
+        List<User> userList = userService.selectUserByName("鼠", 0, 2);
         System.out.println(userList);
     }
 
@@ -85,5 +85,16 @@ public class TestUserService {
     public void deleteUser() {
         int re = userService.deleteUser("000210316002");
         System.out.println(re);
+    }
+
+    @Test
+    public void test() {
+        String status = "正常";
+        String userType = "全部";
+
+        status = (status == "全部") ? null : status;
+        userType = (userType == "全部") ? null : userType;
+
+        System.out.println(status + userType);
     }
 }

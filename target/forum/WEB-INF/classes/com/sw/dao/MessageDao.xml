@@ -13,7 +13,7 @@
 
     <insert id="insertMessage" parameterType="Message">
         insert into messages
-        values (#{userId},#{stature},#{weight},#{sex},#{birth},#{site},#{phone},#{loveAncient},
+        values (#{userId},#{age},#{stature},#{weight},#{sex},#{birth},#{site},#{phone},#{loveAncient},
                 #{hobby},#{work},#{mail},#{qq});
     </insert>
 
@@ -62,4 +62,11 @@
         where user_id=#{userId};
     </delete>
 
+    <delete id="deleteMuchMessage" parameterType="String">
+        delete from messages
+        where user_id in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
 </mapper>

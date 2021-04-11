@@ -5,9 +5,8 @@
 
 <mapper namespace="com.sw.dao.UserDao">
 
-    <select id="selectUserAll" parameterType="String" resultType="User">
-        select user_id,user_name,user_number,user_password,status,
-                experience,user_type,register_date,finally_date,signature
+    <select id="selectUserCount" resultType="Integer">
+        select count(user_id)
         from users
         <where>
             <if test="status != null">
@@ -19,12 +18,35 @@
         </where>
     </select>
 
-    <select id="selectUserByName" parameterType="String" resultType="User">
+    <select id="selectUserAll" resultType="User">
+        select user_id,user_name,user_number,user_password,status,
+                experience,user_type,register_date,finally_date,signature
+        from users
+        <where>
+            <if test="status != null">
+                status=#{status}
+            </if>
+            <if test="userType != null">
+                and user_type=#{userType}
+            </if>
+        </where>
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectUserByName" resultType="User">
         select user_id,user_name,user_number,user_password,status,
                 experience,user_type,register_date,finally_date,signature
         from users
         where user_name in
-            (select user_name from users where user_name like #{userName});
+            (select user_name from users where user_name like #{userName})
+        limit #{start},#{count};
+    </select>
+
+    <select id="selectUserByNameCount" parameterType="String" resultType="Integer">
+        select count(user_id)
+        from users
+        where user_name in
+        (select user_name from users where user_name like #{userName});
     </select>
 
     <select id="selectUserById" parameterType="String" resultType="User">
@@ -64,6 +86,9 @@
             <if test="userName != null">
                 user_name=#{userName},
             </if>
+            <if test="userNumber != null">
+                user_number=#{userNumber},
+            </if>
             <if test="userPassword != null">
                 user_password=#{userPassword},
             </if>
@@ -80,7 +105,7 @@
                 finally_date=#{finallyDate},
             </if>
             <if test="signature != null">
-                signature=#[signature},
+                signature=#{signature},
             </if>
         </set>
         where user_id=#{userId};
@@ -89,5 +114,13 @@
     <delete id="deleteUser" parameterType="String">
         delete from users
         where user_id=#{userId};
+    </delete>
+
+    <delete id="deleteMuchUser" parameterType="String">
+        delete from users
+        where user_id in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
     </delete>
 </mapper>

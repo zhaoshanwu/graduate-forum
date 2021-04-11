@@ -20,17 +20,15 @@ public class AdminController {
      * 管理员登录验证账号密码， 如果存在于数据库则存入session进行登录
      * @param adminNumber
      * @param adminPassword
-     * @param session
      * @return
      */
-    @RequestMapping(value = "/select/number/password",produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/get/number/password",produces = {"application/json;charset=UTF-8"})
     @ResponseBody
-    public Admin getAdminByNP(String adminNumber, String adminPassword, HttpSession session) {
+    public Admin getAdminByNP(String adminNumber, String adminPassword) {
         Admin admin = adminService.selectAdminByNP(adminNumber, adminPassword);
         System.out.println(admin);
 
         if (admin != null) {
-            session.setAttribute("admin", admin);
             return admin;
         } else {
             return null;

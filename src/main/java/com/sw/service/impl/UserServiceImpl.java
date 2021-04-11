@@ -20,17 +20,31 @@ public class UserServiceImpl implements UserService {
     private MessageDao messageDao;
 
     @Override
-    public List<User> selectUserAll(String status, String userType) {
-        return userDao.selectUserAll(status, userType);
+    public Integer selectUserCount(String status, String userType) {
+        return userDao.selectUserCount(status, userType);
     }
 
     @Override
-    public List<User> selectUserByName(String userName) {
+    public List<User> selectUserAll(String status, String userType, Integer start, Integer count) {
+        return userDao.selectUserAll(status, userType, start, count);
+    }
+
+    @Override
+    public List<User> selectUserByName(String userName, Integer start, Integer count) {
         StringBuffer userNameStr = new StringBuffer();
         userNameStr.append("%");
         userNameStr.append(userName);
         userNameStr.append("%");
-        return userDao.selectUserByName(userNameStr.toString());
+        return userDao.selectUserByName(userNameStr.toString(), start, count);
+    }
+
+    @Override
+    public Integer selectUserByNameCount(String userName) {
+        StringBuffer userNameStr = new StringBuffer();
+        userNameStr.append("%");
+        userNameStr.append(userName);
+        userNameStr.append("%");
+        return userDao.selectUserByNameCount(userNameStr.toString());
     }
 
     @Override
@@ -55,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int insertUser(User user, Message message) {
-        return userDao.insertUser(user) + messageDao.updateMessage(message);
+        return userDao.insertUser(user) + messageDao.insertMessage(message);
     }
 
     @Override
@@ -66,5 +80,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public int deleteUser(String userId) {
         return messageDao.deleteMessage(userId) + userDao.deleteUser(userId);
+    }
+
+    @Override
+    public int deleteMuchUser(String[] userIds) {
+        return messageDao.deleteMuchMessage(userIds) + userDao.deleteMuchUser(userIds);
     }
 }

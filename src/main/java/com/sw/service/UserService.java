@@ -10,11 +10,17 @@ import java.util.List;
 @Transactional
 public interface UserService {
 
+    // 获取用户数
+    public Integer selectUserCount(String status, String userType);
+
     // 获取所有用户账户，通过状态和用户类型筛选
-    public List<User> selectUserAll(String status, String userType);
+    public List<User> selectUserAll(String status, String userType, Integer start, Integer count);
 
     // 根据用户昵称模糊查询用户账户
-    public List<User> selectUserByName(String userName);
+    public List<User> selectUserByName(String userName, Integer start, Integer count);
+
+    // 根据用户昵称模糊查询用户账户
+    public Integer selectUserByNameCount(String userName);
 
     // 根据用户ID查询用户账户信息
     public User selectUserById(String userId);
@@ -36,4 +42,7 @@ public interface UserService {
 
     // 根据用户ID删除用户
     public int deleteUser(String userId);
+
+    // 根据用户ID批量删除用户
+    public int deleteMuchUser(String[] userIds);
 }

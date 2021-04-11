@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -21,6 +22,24 @@ public class UserController {
     private UserService userService;
 
     /**
+     * 获取该状态类型的用户数
+     * @param status
+     * @param userType
+     * @return
+     */
+    @RequestMapping(value = "/get/count",produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Integer selectUserCount(String status, String userType) {
+        if (status != null && status.equals("全部")) {
+            status = null;
+        }
+        if (userType != null && userType.equals("全部")) {
+            userType = null;
+        }
+        return userService.selectUserCount(status, userType);
+    }
+
+    /**
      * 根据用户状态和用户类型查询所有符合要求的用户
      * @param status
      * @param userType
@@ -28,8 +47,17 @@ public class UserController {
      */
     @RequestMapping(value = "/get/all",produces = {"application/json;charset=UTF-8"})
     @ResponseBody
-    public List<User> selectUserAll(String status, String userType) {
-        List<User> userList = userService.selectUserAll(status, userType);
+    public List<User> selectUserAll(String status, String userType, Integer start, Integer count) {
+        if (status != null && status.equals("全部")) {
+            status = null;
+        }
+        if (userType != null && userType.equals("全部")) {
+            userType = null;
+        }
+
+        System.out.println(status + userType);
+
+        List<User> userList = userService.selectUserAll(status, userType, start, count);
         return userList;
     }
 
@@ -52,9 +80,20 @@ public class UserController {
      */
     @RequestMapping(value = "/get/by/name",produces = {"application/json;charset=UTF-8"})
     @ResponseBody
-    public List<User> selectUserByName(String userName) {
-        List<User> userList = userService.selectUserByName(userName);
+    public List<User> selectUserByName(String userName, Integer start, Integer count) {
+        List<User> userList = userService.selectUserByName(userName, start, count);
         return userList;
+    }
+
+    /**
+     * 根据用户昵称模糊查询所有符合要求的用户个数
+     * @param userName
+     * @return
+     */
+    @RequestMapping(value = "/get/by/name/count",produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Integer selectUserByNameCount(String userName) {
+        return userService.selectUserByNameCount(userName);
     }
 
     /**
@@ -83,12 +122,11 @@ public class UserController {
      */
     @RequestMapping(value = "/post/user",produces = {"application/json;charset=UTF-8"})
     @ResponseBody
-    public Boolean insertUser(String userNumber, String userName, String userPassword) {
+    public Boolean insertUser(String userNumber, String userName, String userPassword, String signature) {
 
         // 根据用户名进行用户查询，如果存在相同用户账户，则无法注册
         String oldUserId = userService.selectUserByNumber(userNumber);
 
-        System.out.println(oldUserId);
         if (oldUserId != null) {
             System.out.println("false");
             return false;
@@ -105,6 +143,9 @@ public class UserController {
         user.setExperience(0);
         user.setUserType("普通用户");
         user.setRegisterDate(IDUtile.getNewDate());
+        if (signature != null) {
+            user.setSignature(signature);
+        }
 
         Message message = new Message();
         message.setUserId(userId);
@@ -146,6 +187,31 @@ public class UserController {
         int re = userService.deleteUser(userId);
 
         if (re == 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 根于用户ID批量删除用户
+     * @param userList
+     * @return
+     */
+    @RequestMapping(value = "/delete/multi/user",produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Boolean deleteMuchUser(List<User> userList) {
+
+        String[] userIds = new String[userList.size()];
+
+        for (int index = 0; index < userList.size(); index++) {
+            userIds[index] = userList.get(index).getUserId();
+        }
+
+
+        int re = userService.deleteMuchUser(userIds);
+
+        if (re >= 1) {
             return true;
         } else {
             return false;
